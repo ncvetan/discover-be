@@ -24,7 +24,7 @@ exports.placeList = async function (req, res) {
         'entertainment',
         'food',
         'shopping',
-        'landmarks',
+        'landmark',
     ]);
     const reg = /^\d+$/;
 
@@ -43,6 +43,7 @@ exports.placeList = async function (req, res) {
             let avgReview = await getAvgReviewScore(placeList[i]);
             placeList[i].avgReviewScore = avgReview;
         }
+        console.log(placeList);
 
         return res.json(placeList);
 
@@ -69,8 +70,18 @@ exports.placeDetails = async function (req, res) {
 };
 
 // Create a new place on HTTP POST
-exports.placeCreatePOST = function (req, res) {
-    res.send('NOT IMPLEMENTED: Place create POST');
+exports.placeCreatePOST = async function (req, res) {
+    
+    let body = req.body;
+    const place = new Place(body);
+    console.log(place)
+
+    try {
+        const doc = await place.save();
+        return res.status(201).json(doc);
+    } catch (err) {
+        return res.status(500).json({ err: 'Error in updating place reviews' });
+    }
 };
 
 // Handle delete on HTTP POST

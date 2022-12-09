@@ -1,6 +1,9 @@
 require('dotenv').config();
 const Place = require('../models/place');
 const Review = require('../models/review');
+const Filter = require('bad-words');
+
+const filter = new Filter();
 
 // List reviews for a specific place
 exports.reviewList = async function (req, res) {
@@ -30,7 +33,7 @@ exports.reviewCreateGET = function (req, res) {
 
 // Handle a new review on a HTTP POST
 exports.reviewCreatePOST = async function (req, res) {
-    const body = req.body;
+    let body = req.body;
 
     if (!body.rating) {
         return res.status(400).json({ err: 'Missing rating' });
@@ -38,6 +41,8 @@ exports.reviewCreatePOST = async function (req, res) {
     if (!body.description) {
         return res.status(400).json({ err: 'Missing description' });
     }
+
+    body.description = filter.clean(body.description);
 
     const review = new Review(body);
 
