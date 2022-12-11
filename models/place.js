@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const Review = require('../models/review');
 
 const PlaceSchema = new mongoose.Schema(
     {

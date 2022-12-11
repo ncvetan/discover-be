@@ -29,7 +29,6 @@ exports.placeList = async function (req, res) {
     const reg = /^\d+$/;
 
     if (acceptable.has(req.params.category) && reg.test(req.params.pg)) {
-
         const limitVal = 18;
         let placeList = await Place.find(
             { category: `${req.params.category}` },
@@ -46,14 +45,12 @@ exports.placeList = async function (req, res) {
         console.log(placeList);
 
         return res.json(placeList);
-
     }
-    return res.status(400).json({message: "Category not recognized"})
+    return res.status(400).json({ message: 'Category not recognized' });
 };
 
 // Respond with the full details for a specific place
 exports.placeDetails = async function (req, res) {
-
     let doc = await Place.findById(req.params.id)
         .populate({
             path: 'reviews',
@@ -66,21 +63,19 @@ exports.placeDetails = async function (req, res) {
     const photoRef = await getPhotoReference(doc.name);
     doc.photoRef = photoRef;
     return res.json(doc);
-
 };
 
 // Create a new place on HTTP POST
 exports.placeCreatePOST = async function (req, res) {
-    
     let body = req.body;
     const place = new Place(body);
-    console.log(place)
+    console.log(place);
 
     try {
         const doc = await place.save();
         return res.status(201).json(doc);
     } catch (err) {
-        return res.status(500).json({ err: 'Error in updating place reviews' });
+        console.log(err);
     }
 };
 
