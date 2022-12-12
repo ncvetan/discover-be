@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const jwtCheck = require('../utilities/jwt.js');
 
 const placeController = require('../controllers/placeController');
 const reviewController = require('../controllers/reviewController');
+
+const { jwtCheck, checkRequiredPermissions } = require('../utilities/jwt.js')
 
 // Get index page
 router.get('/', placeController.index);
@@ -16,7 +17,12 @@ router.get('/places/:category/:pg', placeController.placeList);
 // Get a specific place
 router.get('/places/:id', placeController.placeDetails);
 
-router.post('/places/create', jwtCheck, placeController.placeCreatePOST);
+router.post(
+    '/places/create',
+    jwtCheck,
+    checkRequiredPermissions(['create:place']),
+    placeController.placeCreatePOST
+);
 
 /* REVIEW ROUTES */
 
