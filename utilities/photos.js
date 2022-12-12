@@ -9,14 +9,11 @@ async function getPhotoReference(placeSearchText) {
         headers: {},
     };
 
-    try {
-        let response = await axios(config);
-        let result = JSON.stringify(response.data);
-        result = JSON.parse(result);
-        return String(result.candidates[0].photos[0].photo_reference);
-    } catch (err) {
-        console.log(err);
-    }
+    let response = await axios(config);
+    let result = JSON.stringify(response.data);
+    result = JSON.parse(result);
+    return String(result.candidates[0].photos[0].photo_reference);
+
 }
 
 module.exports = getPhotoReference;
