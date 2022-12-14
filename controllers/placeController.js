@@ -42,7 +42,6 @@ exports.placeList = async function (req, res) {
             let avgReview = await getAvgReviewScore(placeList[i]);
             placeList[i].avgReviewScore = avgReview;
         }
-        console.log(placeList);
 
         return res.json(placeList);
     }
@@ -61,7 +60,10 @@ exports.placeDetails = async function (req, res) {
         .lean();
 
     const photoRef = await getPhotoReference(doc.name);
-    doc.photoRef = photoRef;
+    if (photoRef !== null)
+    {
+        doc.photoRef = photoRef;
+    }
     return res.json(doc);
 };
 
