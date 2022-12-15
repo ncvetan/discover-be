@@ -4,7 +4,7 @@ const router = express.Router();
 const placeController = require('../controllers/placeController');
 const reviewController = require('../controllers/reviewController');
 
-const { jwtCheck, checkRequiredPermissions } = require('../utilities/auth.js')
+const { jwtCheck, checkRequiredPermissions } = require('../utilities/auth.js');
 
 // Get index page
 router.get('/', placeController.index);

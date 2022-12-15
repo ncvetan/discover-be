@@ -60,8 +60,7 @@ exports.placeDetails = async function (req, res) {
         .lean();
 
     const photoRef = await getPhotoReference(doc.name);
-    if (photoRef !== null)
-    {
+    if (photoRef !== null) {
         doc.photoRef = photoRef;
     }
     return res.json(doc);

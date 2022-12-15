@@ -1,12 +1,13 @@
 const axios = require('axios');
 
 async function getPhotoReference(placeSearchText) {
-    try{
+    try {
         const placeSearchTextURI = encodeURIComponent(placeSearchText);
 
+        // This is location biased to Windsor, ON. In the future, user data can be accessed to bias this request to their location
         const config = {
             method: 'get',
-            url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=formatted_address%2Cphotos&input=${placeSearchTextURI}&inputtype=textquery&key=${process.env.GOOGLE_API_KEY}`,
+            url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=formatted_address%2Cphotos&input=${placeSearchTextURI}&locationbias=point%42.3149%2C83.0364&inputtype=textquery&key=${process.env.GOOGLE_API_KEY}`,
             headers: {},
         };
 
@@ -14,11 +15,9 @@ async function getPhotoReference(placeSearchText) {
         let result = JSON.stringify(response.data);
         result = JSON.parse(result);
         return String(result.candidates[0].photos[0].photo_reference);
+    } catch (err) {
+        return null;
     }
-    catch(err){
-        return null
-    }
-
 }
 
 module.exports = getPhotoReference;
