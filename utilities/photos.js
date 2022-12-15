@@ -7,7 +7,7 @@ async function getPhotoReference(placeSearchText) {
         // This is location biased to Windsor, ON. In the future, user data can be accessed to bias this request to their location
         const config = {
             method: 'get',
-            url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=formatted_address%2Cphotos&input=${placeSearchTextURI}&locationbias=point%42.3149%2C83.0364&inputtype=textquery&key=${process.env.GOOGLE_API_KEY}`,
+            url: `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?fields=formatted_address%2Cphotos&input=${placeSearchTextURI}&locationbias=point%3A42.3149%2C-83.0364&inputtype=textquery&key=${process.env.GOOGLE_API_KEY}`,
             headers: {},
         };
 
