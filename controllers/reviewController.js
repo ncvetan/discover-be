@@ -5,6 +5,18 @@ const Filter = require('bad-words');
 
 const filter = new Filter();
 
+async function getAvgReviewScore(place) {
+    let result = await Review.aggregate([
+        { $match: { _id: { $in: place.reviews } } },
+        { $group: { _id: place._id, average: { $avg: '$rating' } } },
+    ]);
+
+    if (result !== undefined && result.length !== 0) {
+        return result[0].average.toFixed(1);
+    }
+    return 0;
+}
+
 // List reviews for a specific place
 exports.reviewList = async function (req, res) {
     const limitVal = 10;
@@ -48,11 +60,18 @@ exports.reviewCreatePOST = async function (req, res) {
 
     try {
         const doc = await review.save();
-        await Place.findByIdAndUpdate(
+
+        let place = await Place.findByIdAndUpdate(
             req.params.id,
             { $addToSet: { reviews: doc._id } },
             { upsert: true, new: true }
-        );
+            );
+
+        const avgReviewScore = await getAvgReviewScore(place);
+        place.avgReviewScore = avgReviewScore;
+        console.log(avgReviewScore);
+        place.save();
+
         return res.status(201).json(doc);
     } catch (err) {
         return res.status(500).json({ err: 'Error in updating place reviews' });

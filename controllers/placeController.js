@@ -1,23 +1,10 @@
 require('dotenv').config();
 const Place = require('../models/place');
-const Review = require('../models/review');
 const getPhotoReference = require('../utilities/photos');
 
 exports.index = function (req, res) {
     res.json({ time: new Date() });
 };
-
-async function getAvgReviewScore(place) {
-    let result = await Review.aggregate([
-        { $match: { _id: { $in: place.reviews } } },
-        { $group: { _id: place._id, average: { $avg: '$rating' } } },
-    ]);
-
-    if (result !== undefined && result.length !== 0) {
-        return result[0].average.toFixed(1);
-    }
-    return 0;
-}
 
 exports.placeList = async function (req, res) {
     const acceptable = new Set([
@@ -32,16 +19,12 @@ exports.placeList = async function (req, res) {
         const limitVal = 18;
         let placeList = await Place.find(
             { category: `${req.params.category}` },
-            'name address attributes hours reviews'
+            'name address attributes hours reviews avgReviewScore'
         )
             .sort({ name: 1 })
             .limit(limitVal)
             .skip((Number(req.params.pg) - 1) * limitVal)
             .lean();
-        for (let i = 0; i < placeList.length; i++) {
-            let avgReview = await getAvgReviewScore(placeList[i]);
-            placeList[i].avgReviewScore = avgReview;
-        }
 
         return res.json(placeList);
     }

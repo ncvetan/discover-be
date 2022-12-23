@@ -24,7 +24,7 @@ const PlaceSchema = new mongoose.Schema(
             postalCode: { type: String },
         },
         phone: { type: String, default: 'Not listed' },
-        attributes: [{ type: String, maxLength: 6 }],
+        attributes: [{ type: String }],
         // Each day of the week has an array of start/end times. Using arrays allows for multiple intraday periods of open times.
         // If an array has a singular entry with s=0, e=1440, it will be open 24hrs that day, if s=0,e=0, it is closed.
         hours: {
@@ -72,6 +72,13 @@ const PlaceSchema = new mongoose.Schema(
             ],
         },
         reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
+        avgReviewScore: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 0,
+            required: true,
+        },
     },
     {
         toJSON: { virtuals: true },
