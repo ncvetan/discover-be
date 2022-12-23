@@ -69,7 +69,6 @@ exports.reviewCreatePOST = async function (req, res) {
 
         const avgReviewScore = await getAvgReviewScore(place);
         place.avgReviewScore = avgReviewScore;
-        console.log(avgReviewScore);
         place.save();
 
         return res.status(201).json(doc);
