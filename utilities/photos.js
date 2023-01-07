@@ -20,4 +20,23 @@ async function getPhotoReference(placeSearchText) {
     }
 }
 
-module.exports = getPhotoReference;
+async function getPhoto(photoRef) {
+    try{
+        const config = {
+            method: 'get',
+            url: `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${photoRef}&key=${process.env.GOOGLE_API_KEY}`,
+            headers: {},
+            responseType: 'arraybuffer'
+        };
+
+        let response = await axios(config);
+
+        const type = response.headers['content-type']
+        let base64ImageString = Buffer.from(response.data, 'binary').toString('base64')
+        return { type: type, photoB64: base64ImageString}
+    } catch (err) {
+        return null;
+    }
+}
+
+module.exports = {getPhotoReference, getPhoto};

@@ -1,6 +1,6 @@
 require('dotenv').config();
 const Place = require('../models/place');
-const getPhotoReference = require('../utilities/photos');
+const {getPhotoReference, getPhoto} = require('../utilities/photos');
 
 exports.index = function (req, res) {
     res.json({ time: new Date() });
@@ -43,8 +43,15 @@ exports.placeDetails = async function (req, res) {
         .lean();
 
     const photoRef = await getPhotoReference(doc.name);
+    
     if (photoRef !== null) {
         doc.photoRef = photoRef;
+        const photoInfo = await getPhoto(photoRef)
+        if (photoInfo !== null)
+        {
+            doc.photo = photoInfo.photoB64;
+            doc.photoType = photoInfo.type;
+        }
     }
     return res.json(doc);
 };
